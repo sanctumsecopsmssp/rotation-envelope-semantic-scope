@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rfc [
+  <!ENTITY nbsp "&#160;">
+]>
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude"
+     category="info"
+     docName="draft-vicente-rotation-envelope-semantic-scope-00"
+     ipr="trust200902"
+     submissionType="IETF"
+     xml:lang="en"
+     version="3">
+
+  <front>
+    <title abbrev="PQ Rotation Envelope Scope">Post-Quantum Rotation Envelope Semantic Scope and Differentiation</title>
+    <seriesInfo name="Internet-Draft" value="draft-vicente-rotation-envelope-semantic-scope-00"/>
+
+    <author initials="B." surname="Vicente" fullname="Brian Vicente">
+      <organization>Sanctum SecOps LLC</organization>
+      <address>
+        <postal><city>Pine City</city><region>NY</region><country>United States of America</country></postal>
+        <email>brian@sso-labs.com</email>
+        <uri>https://orcid.org/0009-0006-6395-5308</uri>
+      </address>
+    </author>
+
+    <date year="2026" month="August" day="16"/>
+    <area>Security</area>
+    <workgroup>LAMPS</workgroup>
+    <keyword>rotation</keyword>
+    <keyword>envelope</keyword>
+    <keyword>post-quantum</keyword>
+    <keyword>semantic</keyword>
+    <keyword>scope</keyword>
+    <keyword>LAMPS</keyword>
+    <keyword>X.509</keyword>
+
+    <abstract>
+      <t>This document defines the semantic scope and differentiation of post-quantum rotation envelopes for X.509 certificate and key material. A rotation envelope carries the metadata that distinguishes a key rotation event from a fresh issuance, binding the new key to the predecessor it replaces and declaring the scope of objects (certificates, signatures, ciphertexts) whose trust transitions with the rotation. This document specifies the envelope structure and the differentiation rules that prevent rotation-envelope confusion across distinct rotation events.</t>
+    </abstract>
+
+    <note title="Source and Archival" removeInRFC="true">
+      <t>
+        Source for this draft is maintained at
+        <eref target="https://github.com/Sanc-Admin/rotation-envelope-semantic-scope">https://github.com/Sanc-Admin/rotation-envelope-semantic-scope</eref>.
+        Author ORCID iD:
+        <eref target="https://orcid.org/0009-0006-6395-5308">https://orcid.org/0009-0006-6395-5308</eref>.
+        Reference implementation and JSON evidence: CygnetLib
+        (<eref target="https://github.com/sanctumsecopsmssp/CygnetLib">https://github.com/sanctumsecopsmssp/CygnetLib</eref>).
+      </t>
+    </note>
+
+    <note title="IPR Considerations" removeInRFC="true">
+      <t>
+        Sanctum IP Co (a Delaware corporation, assignee of Sanctum SecOps LLC) holds or
+        intends to file patent or other intellectual property rights covering subject matter described in this
+        document. By posting this Internet-Draft, the author submits to the IETF Trust the rights described
+        in BCP 78 and BCP 79. All intellectual property described in this document is owned by Sanctum IP Co,
+        128 Dry Run Rd, Pine City, NY 14871. Contact: brian@sso-labs.com.
+      </t>
+    </note>
+
+  </front>
+
+  <middle>
+
+    <section anchor="introduction" numbered="true">
+      <name>Introduction</name>
+      <t>
+        Post-quantum key rotation in X.509 <xref target="RFC5280"/>-based systems is more
+        complex than classical rotation: a single key may be used in multiple contexts
+        (signature, key encapsulation, hybrid combiner), and the rotation of one component
+        of a hybrid or composite key affects the trust of objects bound to that component.
+        A rotation envelope captures the semantic scope of a rotation so that verifiers
+        can determine which objects' trust transitions with the new key and which remain
+        bound to the predecessor.
+      </t>
+      <t>
+        This section will describe the rotation-envelope concept and the differentiation
+        problem: why distinct rotation events must not be conflatable, and how the
+        envelope's semantic scope resolves ambiguity.
+      </t>
+    </section>
+
+    <section anchor="conventions" numbered="true">
+      <name>Conventions and Definitions</name>
+      <t>
+        The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+        "OPTIONAL" in this document are to be interpreted as described in
+        BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
+        appear in all capitals as shown here.
+      </t>
+    </section>
+
+    <section anchor="envelope-structure" numbered="true">
+      <name>Rotation Envelope Structure</name>
+      <t>
+        This section will define the envelope structure: the predecessor key identifier,
+        the successor key identifier, the rotation timestamp, the scope declaration (which
+        object classes and contexts transition), and the signature binding the envelope to
+        the rotating authority. The structure will be expressed as an X.509 extension or a
+        standalone signed object, with ASN.1 syntax.
+      </t>
+    </section>
+
+    <section anchor="semantic-scope" numbered="true">
+      <name>Semantic Scope Declaration</name>
+      <t>
+        This section will define the semantic scope declaration: the set of object classes
+        (certificates, CRLs, OCSP responses, signed messages, encapsulated keys) whose
+        trust transitions with the rotation, and the contexts (e.g., signature-only versus
+        key-encapsulation) in which the transition applies. The section will specify how a
+        verifier interprets the scope when evaluating an object bound to a rotated key.
+      </t>
+    </section>
+
+    <section anchor="differentiation" numbered="true">
+      <name>Differentiation Rules</name>
+      <t>
+        This section will define the differentiation rules that prevent confusion between
+        distinct rotation events: each envelope carries a unique rotation identifier, a
+        monotonic sequence number within the rotating authority, and a hash binding to the
+        predecessor envelope. The section will specify the verification procedure that
+        detects duplicate, reordered, or substituted envelopes.
+      </t>
+    </section>
+
+    <section anchor="security" numbered="true">
+      <name>Security Considerations</name>
+      <t>
+        This section will analyze threats to rotation envelopes: envelope forgery
+        (inducing a verifier to trust a successor not actually rotated by the authority),
+        scope over-extension (claiming a broader transition than the authority intended),
+        and rollback (reverting to a predecessor by suppressing the envelope). The section
+        will identify the mitigations provided by the envelope structure and differentiation
+        rules.
+      </t>
+    </section>
+
+    <section anchor="iana" numbered="true">
+      <name>IANA Considerations</name>
+      <t>
+        This document has no IANA actions.
+      </t>
+    </section>
+
+    <section anchor="acknowledgements" numbered="true">
+      <name>Acknowledgements</name>
+      <t>
+        The author thanks the members of the relevant IETF working groups for their
+        review and feedback. Particular thanks to colleagues at Sanctum SecOps LLC for
+        technical discussion and to the broader IETF community for continued review of
+        post-quantum migration and authorization posture work.
+      </t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+    </references>
+
+    <references title="Informative References">
+      <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.5280.xml"/>
+    </references>
+  </back>
+
+</rfc>
