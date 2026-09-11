@@ -1,14 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE rfc [
-  <!ENTITY nbsp "&#160;">
+<!ENTITY nbsp "&#160;">
 ]>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude"
-     category="info"
-     docName="draft-vicente-rotation-envelope-semantic-scope-00"
-     ipr="trust200902"
-     submissionType="IETF"
-     xml:lang="en"
-     version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-vicente-rotation-envelope-semantic-scope-00" ipr="trust200902" submissionType="IETF" xml:lang="en" version="3">
 
   <front>
     <title abbrev="PQ Rotation Envelope Scope">Post-Quantum Rotation Envelope Semantic Scope and Differentiation</title>
@@ -25,7 +19,7 @@
 
     <date year="2026" month="August" day="20"/>
     <area>Security</area>
-    <workgroup>LAMPS</workgroup>
+    <workgroup>Limited Additional Mechanisms for PKIX and SMIME</workgroup>
     <keyword>rotation</keyword>
     <keyword>envelope</keyword>
     <keyword>post-quantum</keyword>
